@@ -49,7 +49,15 @@ router.put('', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
-    
+    let respuesta;
+    const returnArray = await svc.DeleteByIdAsync(req.params.id);
+    if(returnArray == 1){
+        respuesta = res.status(200).send('Se ha eliminado correctamente');
+    }else if(returnArray == 0){
+        respuesta = res.status(200).send('No hay ninguna provincia con ese id');
+    }else{
+        respuesta = res.status(500).send('error interno');
+    }
 })
 
 export default router;

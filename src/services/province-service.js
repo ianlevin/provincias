@@ -24,7 +24,7 @@ export default class ProvinceService{
     }
     DeleteByIdAsync = async (id) => {
         const repo = new ProvinceRepository();
-        const objeto = await repo.DeleteByIdAsync();
+        const objeto = await repo.DeleteByIdAsync(id);
         return objeto;
     }
 }

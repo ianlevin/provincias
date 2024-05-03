@@ -66,7 +66,24 @@ export default class ProvinceRepository {
         return objeto;
     }
     DeleteByIdAsync = async (id) => {
+        let objeto = null
+        const client = new Client(config)
+        try{
+            await client.connect()
+            let sql = 'DELETE FROM locations WHERE id_province = $1'
+            let values = [id]
+            let result = await client.query(sql, values)
 
+            sql = 'DELETE FROM Provinces WHERE Id = $1'
+            values = [id]
+            result = await client.query(sql, values)
+            await client.end()
+
+            objeto = result.rowCount
+        }catch (error){
+            console.log(error)
+        }
+        return objeto;
     }
 
 }
