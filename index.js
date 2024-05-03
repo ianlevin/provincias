@@ -7,9 +7,7 @@ const port = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use('/front', express.static('public'));
 app.use('/api/provinces', ProvinceRouter);
-app.use(unknownEndpoint);
 
 app.listen(port, () => {
     console.log(`"server" Listening on port ${port}`);
