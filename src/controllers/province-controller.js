@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import ProvinceService from './../services/province-service.js';
 import Province from './../entities/province.js'
+import ValidacionesHelper from '../helpers/ValidacionesHelper.js';
 const router = Router();
 const svc = new ProvinceService();
 
@@ -18,12 +19,19 @@ router.get('', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     let respuesta;
-    const returnArray = await svc.getByIdSync(req.params.id);
-    if(returnArray != null){
-        respuesta = res.status(200).json(returnArray);
+    if(ValidacionesHelper.ValidaNumero(req.params.id)){
+        respuesta = res.status(200).send("No se escribio un numero")
     }else{
-        respuesta = res.status(500).send('Error interno.');
+        const returnArray = await svc.getByIdSync(req.params.id);
+        if(returnArray.length > 0){
+            respuesta = res.status(200).json(returnArray);
+        }else if(returnArray.length == 0){
+            respuesta = res.status(200).send("No hay ninguna ciudad con ese id")
+        }else{
+            respuesta = res.status(500).send('Error interno.');
+        }
     }
+    
 })
 
 router.post('', async (req, res) => {
@@ -51,13 +59,19 @@ router.put('', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     let respuesta;
     const returnArray = await svc.DeleteByIdAsync(req.params.id);
-    if(returnArray == 1){
-        respuesta = res.status(200).send('Se ha eliminado correctamente');
-    }else if(returnArray == 0){
-        respuesta = res.status(200).send('No hay ninguna provincia con ese id');
+
+    if(ValidacionesHelper.ValidaNumero(req.params.id)){
+        respuesta = res.status(200).send("No se escribio un numero")
     }else{
-        respuesta = res.status(500).send('error interno');
+        if(returnArray == 1){
+            respuesta = res.status(200).send('Se ha eliminado correctamente');
+        }else if(returnArray == 0){
+            respuesta = res.status(200).send('No hay ninguna provincia con ese id');
+        }else{
+            respuesta = res.status(500).send('error interno');
+        }
     }
+    
 })
 
 export default router;
